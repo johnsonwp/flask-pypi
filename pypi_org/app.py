@@ -3,24 +3,24 @@ import flask
 app = flask.Flask(__name__)
 
 
-def get_latest_packages():
-    return [
-        {'name': 'flask', 'version': '1.2.3'},
-        {'name': 'sqlalchemy', 'version': '2.2.0'},
-        {'name': 'passlib', 'version': '3.0.0'}
-    ]
+def main():
+    register_blueprints()
+    app.run(debug=True)
 
 
-@app.route('/')
-def index():
-    test_packages = get_latest_packages()
-    return flask.render_template('home/index.html', packages=test_packages)
+def register_blueprints():
+    from pypi_org.views import account_views
+    from pypi_org.views import home_views
+    from pypi_org.views import package_views
+    from pypi_org.views import cms_views
 
-
-@app.route('/about')
-def about():
-    return flask.render_template('home/about.html')
+    app.register_blueprint(account_views.blueprint)
+    app.register_blueprint(home_views.blueprint)
+    app.register_blueprint(package_views.blueprint)
+    app.register_blueprint(cms_views.blueprint)
 
 
 if __name__ == '__main__':
-    app.run()
+    main()
+else:
+    register_blueprints()
